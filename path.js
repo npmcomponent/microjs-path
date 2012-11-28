@@ -3,7 +3,7 @@ var Path = {
         if (Path.routes.defined.hasOwnProperty(path)) {
             return Path.routes.defined[path];
         } else {
-            return new Path.core.route(path);
+            return new Route(path);
         }
     },
     root: function (path) {
@@ -112,28 +112,13 @@ var Path = {
             }
         }
 
-        // The 'document.documentMode' checks below ensure that PathJS fires the right events
-        // even in IE "Quirks Mode".
-        if ("onhashchange" in window && (!document.documentMode || document.documentMode >= 8)) {
-            window.onhashchange = fn;
-        } else {
-            setInterval(fn, 50);
-        }
+        window.onhashchange = fn;
 
         if(location.hash !== "") {
             Path.dispatch(location.hash);
         }
     },
-    core: {
-        route: function (path) {
-            this.path = path;
-            this.action = null;
-            this.do_enter = [];
-            this.do_exit = null;
-            this.params = {};
-            Path.routes.defined[path] = this;
-        }
-    },
+
     routes: {
         current: null,
         root: null,
@@ -142,7 +127,17 @@ var Path = {
         defined: {}
     }
 };
-Path.core.route.prototype = {
+
+
+function Route(path) {
+    this.path = path;
+    this.action = null;
+    this.do_enter = [];
+    this.do_exit = null;
+    this.params = {};
+    Path.routes.defined[path] = this;
+}
+Route.prototype = {
     to: function (fn) {
         this.action = fn;
         return this;
