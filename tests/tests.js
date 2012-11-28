@@ -2,7 +2,7 @@ location.hash = '';
 var expected = [];
 var lastDone;
 function update(token) {
-  console.log(token);
+  if (!window.mochaPhantomJS) console.log(token);
   if (!expected.length) {
     throw new Error('The route ' + token + ' was not expected.');
   }

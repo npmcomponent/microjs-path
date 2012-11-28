@@ -1,0 +1,11 @@
+{
+  "name": "path",
+  "version": "0.0.0",
+  "description": "PathJS is a lightweight, client-side routing library that allows you to create \"single page\" applications using Hashbangs and/or HTML5 pushState.",
+  "scripts": {
+    "test": "phantomjs --version && mocha-phantomjs tests/tests.html"
+  },
+  "devDependencies": {
+    "mocha-phantomjs": "~1.0.1"
+  }
+}
