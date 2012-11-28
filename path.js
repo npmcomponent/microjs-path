@@ -1,5 +1,4 @@
 var Path = {
-    'version': "0.8.4",
     'map': function (path) {
         if (Path.routes.defined.hasOwnProperty(path)) {
             return Path.routes.defined[path];
