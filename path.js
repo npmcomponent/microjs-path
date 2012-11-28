@@ -1,20 +1,20 @@
 var Path = {
-    'map': function (path) {
+    map: function (path) {
         if (Path.routes.defined.hasOwnProperty(path)) {
             return Path.routes.defined[path];
         } else {
             return new Path.core.route(path);
         }
     },
-    'root': function (path) {
+    root: function (path) {
         Path.routes.root = path;
     },
-    'rescue': function (fn) {
+    rescue: function (fn) {
         Path.routes.rescue = fn;
     },
-    'history': {
-        'initial':{}, // Empty container for "Initial Popstate" checking variables.
-        'pushState': function(state, title, path){
+    history: {
+        initial:{}, // Empty container for "Initial Popstate" checking variables.
+        pushState: function(state, title, path){
             if(Path.history.supported){
                 if(Path.dispatch(path)){
                     history.pushState(state, title, path);
@@ -25,13 +25,13 @@ var Path = {
                 }
             }
         },
-        'popState': function(event){
+        popState: function(event){
             var initialPop = !Path.history.initial.popped && location.href == Path.history.initial.URL;
             Path.history.initial.popped = true;
             if(initialPop) return;
             Path.dispatch(document.location.pathname);
         },
-        'listen': function(fallback){
+        listen: function(fallback){
             Path.history.supported = !!(window.history && window.history.pushState);
             Path.history.fallback  = fallback;
 
@@ -51,7 +51,7 @@ var Path = {
             }
         }
     },
-    'match': function (path, parameterize) {
+    match: function (path, parameterize) {
         var params = {}, route = null, possible_routes, slice, i, j, compare;
         for (route in Path.routes.defined) {
             if (route !== null && route !== undefined) {
@@ -79,7 +79,7 @@ var Path = {
         }
         return null;
     },
-    'dispatch': function (passed_route) {
+    dispatch: function (passed_route) {
         var previous_route, matched_route;
         if (Path.routes.current !== passed_route) {
             Path.routes.previous = Path.routes.current;
@@ -103,7 +103,7 @@ var Path = {
             }
         }
     },
-    'listen': function () {
+    listen: function () {
         var fn = function(){ Path.dispatch(location.hash); }
 
         if (location.hash === "") {
@@ -124,8 +124,8 @@ var Path = {
             Path.dispatch(location.hash);
         }
     },
-    'core': {
-        'route': function (path) {
+    core: {
+        route: function (path) {
             this.path = path;
             this.action = null;
             this.do_enter = [];
@@ -134,20 +134,20 @@ var Path = {
             Path.routes.defined[path] = this;
         }
     },
-    'routes': {
-        'current': null,
-        'root': null,
-        'rescue': null,
-        'previous': null,
-        'defined': {}
+    routes: {
+        current: null,
+        root: null,
+        rescue: null,
+        previous: null,
+        defined: {}
     }
 };
 Path.core.route.prototype = {
-    'to': function (fn) {
+    to: function (fn) {
         this.action = fn;
         return this;
     },
-    'enter': function (fns) {
+    enter: function (fns) {
         if (fns instanceof Array) {
             this.do_enter = this.do_enter.concat(fns);
         } else {
@@ -155,11 +155,11 @@ Path.core.route.prototype = {
         }
         return this;
     },
-    'exit': function (fn) {
+    exit: function (fn) {
         this.do_exit = fn;
         return this;
     },
-    'partition': function () {
+    partition: function () {
         var parts = [], options = [], re = /\(([^}]+?)\)/g, text, i;
         while (text = re.exec(this.path)) {
             parts.push(text[1]);
@@ -170,7 +170,7 @@ Path.core.route.prototype = {
         }
         return options;
     },
-    'run': function () {
+    run: function () {
         var halt_execution = false, i, result, previous;
 
         if (Path.routes.defined[this.path].hasOwnProperty("do_enter")) {
