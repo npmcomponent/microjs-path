@@ -1,16 +1,21 @@
+var current = null,
+    root = null,
+    rescue = null,
+    previous = null,
+    defined = {};
 var Path = {
     map: function (path) {
-        if (Path.routes.defined.hasOwnProperty(path)) {
-            return Path.routes.defined[path];
+        if (defined.hasOwnProperty(path)) {
+            return defined[path];
         } else {
             return new Route(path);
         }
     },
     root: function (path) {
-        Path.routes.root = path;
+        root = path;
     },
     rescue: function (fn) {
-        Path.routes.rescue = fn;
+        rescue = fn;
     },
     history: {
         initial:{}, // Empty container for "Initial Popstate" checking variables.
@@ -21,7 +26,7 @@ var Path = {
                 }
             } else {
                 if(Path.history.fallback){
-                    window.location.hash = "#" + path;
+                    location.hash = "#" + path;
                 }
             }
         },
@@ -40,10 +45,10 @@ var Path = {
                 window.onpopstate = Path.history.popState;
             } else {
                 if(Path.history.fallback){
-                    for(route in Path.routes.defined){
+                    for(route in defined){
                         if(route.charAt(0) != "#"){
-                          Path.routes.defined["#"+route] = Path.routes.defined[route];
-                          Path.routes.defined["#"+route].path = "#"+route;
+                          defined["#"+route] = defined[route];
+                          defined["#"+route].path = "#"+route;
                         }
                     }
                     Path.listen();
@@ -53,9 +58,9 @@ var Path = {
     },
     match: function (path, parameterize) {
         var params = {}, route = null, possible_routes, slice, i, j, compare;
-        for (route in Path.routes.defined) {
+        for (route in defined) {
             if (route !== null && route !== undefined) {
-                route = Path.routes.defined[route];
+                route = defined[route];
                 possible_routes = route.partition();
                 for (j = 0; j < possible_routes.length; j++) {
                     slice = possible_routes[j];
@@ -81,13 +86,13 @@ var Path = {
     },
     dispatch: function (passed_route) {
         var previous_route, matched_route;
-        if (Path.routes.current !== passed_route) {
-            Path.routes.previous = Path.routes.current;
-            Path.routes.current = passed_route;
+        if (current !== passed_route) {
+            previous = current;
+            current = passed_route;
             matched_route = Path.match(passed_route, true);
 
-            if (Path.routes.previous) {
-                previous_route = Path.match(Path.routes.previous);
+            if (previous) {
+                previous_route = Path.match(previous);
                 if (previous_route !== null && previous_route.do_exit !== null) {
                     previous_route.do_exit();
                 }
@@ -97,8 +102,8 @@ var Path = {
                 matched_route.run();
                 return true;
             } else {
-                if (Path.routes.rescue !== null) {
-                    Path.routes.rescue();
+                if (rescue !== null) {
+                    rescue();
                 }
             }
         }
@@ -107,8 +112,8 @@ var Path = {
         var fn = function(){ Path.dispatch(location.hash); }
 
         if (location.hash === "") {
-            if (Path.routes.root !== null) {
-                location.hash = Path.routes.root;
+            if (root !== null) {
+                location.hash = root;
             }
         }
 
@@ -117,14 +122,6 @@ var Path = {
         if(location.hash !== "") {
             Path.dispatch(location.hash);
         }
-    },
-
-    routes: {
-        current: null,
-        root: null,
-        rescue: null,
-        previous: null,
-        defined: {}
     }
 };
 
@@ -135,7 +132,7 @@ function Route(path) {
     this.do_enter = [];
     this.do_exit = null;
     this.params = {};
-    Path.routes.defined[path] = this;
+    defined[path] = this;
 }
 Route.prototype = {
     to: function (fn) {
@@ -168,10 +165,10 @@ Route.prototype = {
     run: function () {
         var halt_execution = false, i, result, previous;
 
-        if (Path.routes.defined[this.path].hasOwnProperty("do_enter")) {
-            if (Path.routes.defined[this.path].do_enter.length > 0) {
-                for (i = 0; i < Path.routes.defined[this.path].do_enter.length; i++) {
-                    result = Path.routes.defined[this.path].do_enter[i].apply(this, null);
+        if (defined[this.path].hasOwnProperty("do_enter")) {
+            if (defined[this.path].do_enter.length > 0) {
+                for (i = 0; i < defined[this.path].do_enter.length; i++) {
+                    result = defined[this.path].do_enter[i].apply(this, null);
                     if (result === false) {
                         halt_execution = true;
                         break;
@@ -180,7 +177,7 @@ Route.prototype = {
             }
         }
         if (!halt_execution) {
-            Path.routes.defined[this.path].action();
+            defined[this.path].action();
         }
     }
 };
