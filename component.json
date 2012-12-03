@@ -2,7 +2,7 @@
   "name": "path",
   "repo": "microjs/path",
   "description": "Simple, lightweight routing for web browsers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": [
     "util",
     "routing"
