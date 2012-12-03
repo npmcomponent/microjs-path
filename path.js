@@ -181,3 +181,5 @@ Route.prototype = {
         }
     }
 };
+
+module.exports = Path;
