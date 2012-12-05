@@ -49,7 +49,11 @@
             });
           }
         }());
-        mocha.reporter(sendResults).run();
+        var oldReporter = mocha._reporter;
+        mocha.reporter(function (runner) {
+          new oldReporter(runner);
+          sendResults(runner);
+        }).run();
       }
     </script>
   </body>
