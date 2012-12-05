@@ -182,5 +182,5 @@ Route.prototype = {
     }
 };
 
-if (module && module.exports)
+if (typeof module === 'object' && module && module.exports)
     module.exports = Path;
