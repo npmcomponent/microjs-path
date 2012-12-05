@@ -49,7 +49,7 @@
             });
           }
         }());
-        sendResults(mocha.run());
+        mocha.reporter(sendResults).run();
       }
     </script>
   </body>
