@@ -18,7 +18,7 @@
           window.sendResults = sendResults;
           var events = [];
           window.stream = function () {
-            var e = events;
+            var e = JSON.stringify(events);
             events = [];
             return e;
           };
