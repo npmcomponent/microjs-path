@@ -15,6 +15,12 @@
       else {
         function sendResults(runner){
           var failed = [];
+          window.mochaLog = [];
+
+          setInterval(function () {
+            window.mochaLog.push('Ping ' + (new Date()).toString());
+          }, 1000);
+
 
           runner.on('fail', function(test, err){
             failed.push({
