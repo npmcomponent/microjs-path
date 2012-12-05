@@ -182,4 +182,5 @@ Route.prototype = {
     }
 };
 
-module.exports = Path;
+if (module && module.exports)
+    module.exports = Path;
