@@ -17,6 +17,21 @@
           window.mochaResults = null;
           window.sendResults = sendResults;
           var events = [];
+          function shallow(item, used) {
+            if (typeof item === 'object' && item) {
+              for (var i = 0; i < used.length; i++) {
+                if (used[i] === item) return '[Circular Reference]';
+              }
+              used.push(item);
+              var res = {};
+              for (var key in item) {
+                res[key] = shallow(item[key], used);
+              }
+              return res;
+            } else {
+              return item;
+            }
+          }
           window.stream = function () {
             var e = JSON.stringify(events);
             events = [];
@@ -29,7 +44,11 @@
             runner.emit = function () {
               var args = Array.prototype.slice.call(arguments, 0);
               emit.apply(this, arguments);
-              events.push(args)
+              var shallowArgs = [];
+              for (var i = 0; i < args.length; i++) {
+                shallowArgs.push(shallow(args[i], []));
+              }
+              events.push(shallowArgs)
             };
 
             runner.on('fail', function(test, err){
