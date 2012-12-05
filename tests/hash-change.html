@@ -12,7 +12,28 @@
     <script src="hash-change.js"></script>
     <script>
       if (window.mochaPhantomJS) mochaPhantomJS.run();
-      else mocha.run();
+      else {
+        function sendResults(runner){
+          var failed = [];
+
+          runner.on('fail', function(test, err){
+            failed.push({
+              title: test.title,
+              fullTitle: test.fullTitle(),
+              error: {
+                message: err.message,
+                stack: err.stack
+              }
+            });
+          });
+
+          runner.on('end', function(){
+            runner.stats.failed = failed;
+            global.mochaResults = runner.stats;
+          });
+        }
+        sendResults(mocha.run());
+      }
     </script>
   </body>
 </html>
