@@ -13,31 +13,42 @@
     <script>
       if (window.mochaPhantomJS) mochaPhantomJS.run();
       else {
-        function sendResults(runner){
-          var failed = [];
-          window.mochaLog = [];
+        (function () {
+          window.mochaResults = null;
+          window.sendResults = sendResults;
+          var events = [];
+          window.stream = function () {
+            var e = events;
+            events = [];
+            return e;
+          };
+          function sendResults(runner){
+            var failed = [];
 
-          setInterval(function () {
-            window.mochaLog.push('Ping ' + (new Date()).toString());
-          }, 1000);
+            var emit = runner.emit;
+            runner.emit = function () {
+              var args = Array.prototype.slice.call(arguments, 0);
+              emit.apply(this, arguments);
+              events.push(args)
+            };
 
-
-          runner.on('fail', function(test, err){
-            failed.push({
-              title: test.title,
-              fullTitle: test.fullTitle(),
-              error: {
-                message: err.message,
-                stack: err.stack
-              }
+            runner.on('fail', function(test, err){
+              failed.push({
+                title: test.title,
+                fullTitle: test.fullTitle(),
+                error: {
+                  message: err.message,
+                  stack: err.stack
+                }
+              });
             });
-          });
 
-          runner.on('end', function(){
-            runner.stats.failed = failed;
-            window.mochaResults = runner.stats;
-          });
-        }
+            runner.on('end', function(){
+              runner.stats.failed = failed;
+              window.mochaResults = runner.stats;
+            });
+          }
+        }());
         sendResults(mocha.run());
       }
     </script>
