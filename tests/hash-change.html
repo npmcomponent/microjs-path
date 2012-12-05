@@ -25,7 +25,8 @@
               used.push(item);
               var res = {};
               for (var key in item) {
-                res[key] = shallow(item[key], used);
+                if (typeof item[key] != 'function')
+                  res[key] = shallow(item[key], used);
               }
               return res;
             } else {
