@@ -11,7 +11,7 @@ function update(token) {
   }
   var e = expected.shift();
   if (e.token !== token) e.done(new Error('\nExpected: ' + e.token + '\nActual: ' + token + '\n'));
-  if (e.end) setTimeout(e.done(), 0);
+  if (e.end) e.done();
 }
 function expectNextToken(token, end, done) {
   expectedTotal += token + '::';
