@@ -3847,7 +3847,11 @@ Runner.prototype.globalProps = function() {
 
   // non-enumerables
   for (var i = 0; i < globals.length; ++i) {
-    if (~props.indexOf(globals[i])) continue;
+    var cont = false;
+    for (var x = 0; x < props.length; x++) {
+      if (props[x] == globals[i]) cont = true;
+    };
+    if (cont) continue;
     props.push(globals[i]);
   }
 
