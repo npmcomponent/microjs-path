@@ -1,7 +1,8 @@
 {
   "url": ["/tests/hash-change.html"],
   "browsers": {
-    "chrome": [null, "Windows 2008"],
-    "firefox": ["16", "Windows 2008"]
+    "chrome": [[null, "Windows 2008"]],
+    "firefox": [["16", "Windows 2008"]],
+    "internet explorer": [["10", "Windows 2012"]]
   }
 }
