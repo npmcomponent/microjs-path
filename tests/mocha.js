@@ -1,5 +1,14 @@
 ;(function(){
 
+function bind(fn, self) {
+  if (fn.bind) {
+    fn.bind(self);
+  } else {
+    return function () {
+      fn.apply(self, arguments);
+    };
+  }
+}
 
 // CommonJS require()
 
@@ -2640,7 +2649,7 @@ function List(runner) {
     console.log(color('fail', '  %d) %s'), ++n, test.fullTitle());
   });
 
-  runner.on('end', self.epilogue.bind(self));
+  runner.on('end', bind(self.epilogue, self));
 }
 
 /**
@@ -2779,7 +2788,7 @@ function Min(runner) {
     process.stdout.write('\u001b[1;3H');
   });
 
-  runner.on('end', this.epilogue.bind(this));
+  runner.on('end', bind(this.epilogue, this));
 }
 
 /**
@@ -3228,7 +3237,7 @@ function Spec(runner) {
     console.log(indent() + color('fail', '  %d) %s'), ++n, test.title);
   });
 
-  runner.on('end', self.epilogue.bind(self));
+  runner.on('end', bind(self.epilogue, self));
 }
 
 /**
@@ -4222,7 +4231,7 @@ Runner.prototype.run = function(fn){
   // callback
   this.on('end', function(){
     debug('end');
-    process.removeListener('uncaughtException', self.uncaught.bind(self));
+    process.removeListener('uncaughtException', bind(self.uncaught, self));
     fn(self.failures);
   });
 
@@ -4234,7 +4243,7 @@ Runner.prototype.run = function(fn){
   });
 
   // uncaught exception
-  process.on('uncaughtException', this.uncaught.bind(this));
+  process.on('uncaughtException', bind(this.uncaught, this));
 
   return this;
 };
