@@ -2,10 +2,10 @@
 
 function bind(fn, self) {
   if (fn.bind) {
-    fn.bind(self);
+    return fn.bind(self);
   } else {
     return function () {
-      fn.apply(self, arguments);
+      return fn.apply(self, arguments);
     };
   }
 }
