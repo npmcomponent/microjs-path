@@ -1,3 +1,6 @@
 {
-  "url": ["/tests/hash-change.html"]
+  "url": ["/tests/hash-change.html"],
+  "browsers": {
+    "chrome": [null, "Windows 2008"]
+  }
 }
