@@ -385,12 +385,15 @@ function parse(str, constructors) {
       };
     }
     if (type(o) === 'object') {
+      var original = {};
+
+      if (o['_jssn_proto'] && constructors[o['_jssn_proto']]) {
+        original = Object.create(constructors[o['_jssn_proto']].prototype);
+      }
       return {
         encoded: o,
         decoded: false,
-        original: o['_jssn_proto'] && constructors[o['_jssn_proto']] ?
-          Object.create(constructors[o['_jssn_proto']].prototype)
-          : {}
+        original: original
       };
     }
     if (type(o) === 'string' && i != 0) {
@@ -442,6 +445,7 @@ function decodeObject(from, to, circular) {
   var k = keys(from);
   for (var i = 0; i < k.length; i++) {
     (function (key) {
+      if (key === '_jssn_proto') return;
       to[key] = decode(from[key], circular);
     }(k[i]));
   }
@@ -478,7 +482,7 @@ module.exports = function mochaCloud(mocha) {
     (function (method) {
       var old = console[method] || function () {};
       console[method] = function () {
-        old.apply(this, arguments);
+        if (typeof old === 'function') old.apply(this, arguments);
         var args = ['console-' + method];
         for (var i = 0; i < arguments.length; i++) {
           args.push(arguments[i]);

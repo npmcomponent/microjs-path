@@ -111,12 +111,12 @@ var Path = {
     listen: function () {
         var fn = function(){ Path.dispatch(location.hash); }
 
-        if (location.hash === "") {
+        if (location.hash === '' || location.hash === '#') {
             if (root !== null) {
                 location.hash = root;
             }
         }
-
+        
         window.onhashchange = fn;
 
         if(location.hash !== "") {
@@ -168,7 +168,7 @@ Route.prototype = {
         if (defined[this.path].hasOwnProperty("do_enter")) {
             if (defined[this.path].do_enter.length > 0) {
                 for (i = 0; i < defined[this.path].do_enter.length; i++) {
-                    result = defined[this.path].do_enter[i].apply(this, null);
+                    result = defined[this.path].do_enter[i].call(this);
                     if (result === false) {
                         halt_execution = true;
                         break;
