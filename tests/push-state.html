@@ -6,13 +6,13 @@
   </head>
   <body>
     <div id="mocha"></div>
+    <script src="mocha-cloud.js"></script>
     <script src="mocha.js"></script>
     <script>mocha.setup('bdd')</script>
     <script src="../path.js"></script>
     <script src="push-state.js"></script>
     <script>
-      if (window.mochaPhantomJS) mochaPhantomJS.run();
-      else mocha.run();
+      mochaCloud(mocha).run();
     </script>
   </body>
 </html>

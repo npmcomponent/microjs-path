@@ -1,5 +1,5 @@
 {
-  "url": ["/tests/hash-change.html"],
+  "url": ["/tests/hash-change.html", "/tests/push-state.html"],
   "browsers": {
     "chrome": [[null, "Windows 2008"]],
     "firefox": [["16", "Windows 2008"]],
