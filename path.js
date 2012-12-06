@@ -41,7 +41,8 @@ var Path = {
             Path.history.fallback  = fallback;
 
             if(Path.history.supported){
-                Path.history.initial.popped = ('state' in window.history), Path.history.initial.URL = location.href;
+                Path.history.initial.popped = false;//('state' in window.history);
+                Path.history.initial.URL = location.href;
                 window.onpopstate = Path.history.popState;
             } else {
                 if(Path.history.fallback){

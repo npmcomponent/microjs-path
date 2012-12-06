@@ -105,10 +105,7 @@ function define(route, tokens, description) {
   });
 }
 
-expectNextToken('RESCUE', false, function (err) {
-  throw err;
-});
-Path.history.listen();
+Path.history.listen(true);
 (function () {
   define('/A', ['A[enter]', 'A[action]'], 'calls `enter` then `to` method of A');
   define('/B', ['A[exit]', 'B[enter]', 'B[action]'], 'calls `exit` of A then `enter` of B then `to` method of B');
