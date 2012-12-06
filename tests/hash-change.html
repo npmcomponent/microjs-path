@@ -6,55 +6,14 @@
   </head>
   <body>
     <div id="mocha"></div>
-    <script src="http://component.jit.su/ForbesLindesay/jssn/download/jssn-dev.js"></script>
+    <script src="mocha-cloud.js"></script>
     <script src="mocha.js"></script>
     <script>mocha.setup('bdd')</script>
     <script src="../path.js"></script>
     <script src="hash-change.js"></script>
     <script>
       if (window.mochaPhantomJS) mochaPhantomJS.run();
-      else {
-        (function () {
-          window.mochaResults = null;
-          window.sendResults = sendResults;
-          var events = [];
-          window.stream = function () {
-            var e = jssn.stringify(events);
-            events = [];
-            return e;
-          };
-          function sendResults(runner){
-            var failed = [];
-
-            var emit = runner.emit;
-            runner.emit = function () {
-              emit.apply(this, arguments);
-              events.push(arguments)
-            };
-
-            runner.on('fail', function(test, err){
-              failed.push({
-                title: test.title,
-                fullTitle: test.fullTitle(),
-                error: {
-                  message: err.message,
-                  stack: err.stack
-                }
-              });
-            });
-
-            runner.on('end', function(){
-              runner.stats.failed = failed;
-              window.mochaResults = runner.stats;
-            });
-          }
-        }());
-        var oldReporter = mocha._reporter;
-        mocha.reporter(function (runner) {
-          new oldReporter(runner);
-          sendResults(runner);
-        }).run();
-      }
+      else mochaCloud(mocha).run();
     </script>
   </body>
 </html>
