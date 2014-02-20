@@ -1,3 +1,4 @@
+*This repository is a mirror of the [component](http://component.io) module [microjs/path](http://github.com/microjs/path). It has been modified to work with NPM+Browserify. You can install it using the command `npm install npmcomponent/microjs-path`. Please do not open issues or send pull requests against this repo. If you have issues with this repo, report it to [npmcomponent](https://github.com/airportyh/npmcomponent).*
 [![Build Status](https://secure.travis-ci.org/microjs/path.png?branch=master)](https://travis-ci.org/microjs/path)
 # Path
 
